@@ -31,6 +31,16 @@ Users ask about upcoming matches across major leagues and competitions. The agen
 3. **Probability Breakdown** — model vs Polymarket comparison (primary market display)
 4. **Trading Insight** — divergence summary, confidence caveats, save CTA
 
+## Getting Started
+
+```bash
+pnpm install
+cp .env.example .env.local
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000). Without API keys the app runs in **demo mode** with sample fixtures and analysis. Add `API_FOOTBALL_KEY` and `ZEROG_PRIVATE_KEY` for live data and 0G Compute inference.
+
 ## Documentation
 
 See [architecture.md](./architecture.md) for system design, data flows, API contracts, and deployment notes.
