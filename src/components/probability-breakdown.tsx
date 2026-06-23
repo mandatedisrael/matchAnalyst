@@ -50,7 +50,7 @@ export function ProbabilityBreakdown({ result }: ProbabilityBreakdownProps) {
   const hasMarket = Boolean(result?.polymarket?.found);
 
   return (
-    <section className="bg-surface border-border rounded-2xl border p-6">
+    <section className="bg-surface-elevated border-border border p-6">
       <div className="mb-4">
         <h2 className="text-lg font-semibold">Probability Breakdown</h2>
         <p className="text-muted text-sm">

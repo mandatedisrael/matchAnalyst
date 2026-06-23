@@ -63,7 +63,7 @@ export function AskAnalyst({ result }: AskAnalystProps) {
 
   if (!result) {
     return (
-      <section className="bg-surface border-border rounded-2xl border p-6">
+      <section className="bg-surface-elevated border-border border p-6">
         <h2 className="text-lg font-semibold">Ask Analyst</h2>
         <p className="text-muted mt-2 text-sm">
           Run a match analysis first, then ask follow-up questions interactively.
@@ -73,7 +73,7 @@ export function AskAnalyst({ result }: AskAnalystProps) {
   }
 
   return (
-    <section className="bg-surface border-border flex flex-col rounded-2xl border p-6">
+    <section className="bg-surface-elevated border-border flex flex-col border p-6">
       <div className="mb-4">
         <h2 className="text-lg font-semibold">Ask Analyst</h2>
         <p className="text-muted text-sm">

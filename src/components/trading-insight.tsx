@@ -21,7 +21,7 @@ export function TradingInsight({
     .sort((a, b) => Math.abs(b.delta ?? 0) - Math.abs(a.delta ?? 0))[0];
 
   return (
-    <section className="bg-surface border-border rounded-2xl border p-6">
+    <section className="bg-surface-elevated border-border border p-6">
       <div className="mb-4">
         <h2 className="text-lg font-semibold">Trading Insight</h2>
         <p className="text-muted text-sm">

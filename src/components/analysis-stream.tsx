@@ -14,7 +14,7 @@ export function AnalysisStream({
   progressMessage,
 }: AnalysisStreamProps) {
   return (
-    <section className="bg-surface border-border rounded-2xl border p-6">
+    <section className="bg-surface-elevated border-border border p-6">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold">AI Analysis</h2>

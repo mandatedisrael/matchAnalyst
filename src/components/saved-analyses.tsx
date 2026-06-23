@@ -11,7 +11,7 @@ interface SavedAnalysesProps {
 
 export function SavedAnalyses({ items, onLoad, onDelete }: SavedAnalysesProps) {
   return (
-    <section className="bg-surface border-border rounded-2xl border p-6">
+    <section className="bg-surface-elevated border-border border p-6">
       <div className="mb-4">
         <h2 className="text-lg font-semibold">Saved Research</h2>
         <p className="text-muted text-sm">

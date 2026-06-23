@@ -31,7 +31,7 @@ export function ServiceStatus() {
   if (!health) return null;
 
   return (
-    <div className="bg-surface border-border flex flex-wrap items-center gap-2 rounded-2xl border px-4 py-3 text-xs">
+    <div className="bg-surface-elevated border-border flex flex-wrap items-center gap-2 border px-4 py-3 text-xs">
       <span className="bg-accent-soft text-accent rounded-full px-3 py-1 font-medium">
         {MODE_LABELS[health.mode]}
       </span>
