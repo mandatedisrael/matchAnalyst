@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+export const maxDuration = 60;
+
 import { createSseStream } from "@/lib/sse";
 import { analyzeRequestSchema } from "@/lib/schemas/analysis";
 import { analyzeFixture } from "@/services/orchestrator/analyze";

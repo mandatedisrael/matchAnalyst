@@ -22,10 +22,7 @@ function emptyMarket(): PolymarketMarketContext {
   };
 }
 
-function mapEventToMarket(
-  event: GammaEvent,
-  fixture: FixtureSummary,
-): PolymarketMarketContext {
+function mapEventToMarket(event: GammaEvent): PolymarketMarketContext {
   const market = pickMatchWinnerMarket(event.markets);
   if (!market) return emptyMarket();
 
@@ -90,7 +87,7 @@ export async function resolvePolymarketMarket(
 
     if (!matched) return emptyMarket();
 
-    return mapEventToMarket(matched, fixture);
+    return mapEventToMarket(matched);
   } catch {
     return emptyMarket();
   }

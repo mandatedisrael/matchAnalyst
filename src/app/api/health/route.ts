@@ -9,6 +9,7 @@ import {
 export async function GET() {
   return NextResponse.json({
     status: "ok",
+    storage: "browser-local",
     services: {
       apiFootball: hasApiFootball(),
       zerogCompute: hasZerogCompute(),

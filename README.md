@@ -10,8 +10,9 @@ Users ask about upcoming matches across major leagues and competitions. The agen
 - Data-driven analysis from API-Football (form, H2H, injuries, standings, lineups)
 - Polymarket-style probability output: `Home Win: 58% | Draw: 25% | Away Win: 17%`
 - Side-by-side comparison with Polymarket odds when a market exists
-- User memory for favorite teams and leagues (0G Storage)
-- Save predictions and AI-backed market research notes
+- Interactive workspace with tabbed sections and live analysis progress
+- Ask Analyst — conversational follow-ups grounded in the current analysis
+- Favorite teams and saved research stored in your browser (no server database)
 
 ## Tech Stack
 
@@ -19,7 +20,7 @@ Users ask about upcoming matches across major leagues and competitions. The agen
 |-------|------------|
 | Frontend | Next.js, React, TypeScript |
 | AI Analyst | 0G Compute Network |
-| Memory / Storage | 0G Storage |
+| User data | Browser localStorage |
 | Football Data | API-Football (api-sports.io) |
 | Market Context | Polymarket Gamma API |
 | Weather | OpenWeatherMap |
@@ -30,6 +31,7 @@ Users ask about upcoming matches across major leagues and competitions. The agen
 2. **AI Analysis** — conversational, data-driven match breakdown
 3. **Probability Breakdown** — model vs Polymarket comparison (primary market display)
 4. **Trading Insight** — divergence summary, confidence caveats, save CTA
+5. **Ask Analyst** — interactive follow-up Q&A on the current match
 
 ## Getting Started
 
@@ -40,6 +42,19 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000). Without API keys the app runs in **demo mode** with sample fixtures and analysis. Add `API_FOOTBALL_KEY` and `ZEROG_PRIVATE_KEY` for live data and 0G Compute inference.
+
+## Production deploy (Vercel)
+
+1. Import the GitHub repo in [Vercel](https://vercel.com)
+2. Set environment variables from `.env.example`
+3. Deploy — no database or Redis required
+
+```bash
+pnpm check   # lint + typecheck
+pnpm build
+```
+
+Saved analyses and favorite teams persist in the user's browser. API routes handle football data, Polymarket lookup, analysis, and follow-up chat only.
 
 ## Documentation
 

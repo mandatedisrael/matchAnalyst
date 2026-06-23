@@ -44,5 +44,3 @@ coverage/
 *.pem
 wallet.json
 
-# Local persistence
-.data/
