@@ -1,5 +1,3 @@
-import { getDemoPolymarket } from "@/lib/demo-data";
-import { hasApiFootball } from "@/lib/env";
 import type { FixtureSummary } from "@/types/fixture";
 import type { PolymarketMarketContext } from "@/types/polymarket";
 import { gammaFetch } from "@/services/polymarket/client";
@@ -59,10 +57,6 @@ async function fetchEventBySlug(slug: string): Promise<GammaEvent | null> {
 export async function resolvePolymarketMarket(
   fixture: FixtureSummary,
 ): Promise<PolymarketMarketContext> {
-  if (!hasApiFootball()) {
-    return getDemoPolymarket(fixture);
-  }
-
   try {
     const searchResults = await searchPolymarketEvents(fixture);
     let matched = pickBestEvent(searchResults, fixture);

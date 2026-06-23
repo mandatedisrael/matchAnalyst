@@ -85,43 +85,14 @@ async function runZerogChat(prompt: string): Promise<string> {
   return runBrokerChat(prompt);
 }
 
-function runDemoChat(question: string, result: AnalysisResult): string {
-  const q = question.toLowerCase();
-  const homePct = (result.probabilities.home * 100).toFixed(0);
-
-  if (q.includes("polymarket") || q.includes("market") || q.includes("edge")) {
-    const gap = result.comparisons.find((c) => Math.abs(c.delta ?? 0) > 0.03);
-    if (gap?.delta !== undefined) {
-      return `The largest gap is on ${gap.label.toLowerCase()}: the model is ${(gap.delta * 100).toFixed(0)} points vs Polymarket. ${result.tradingInsight}`;
-    }
-    return result.tradingInsight;
-  }
-
-  if (q.includes("injur") || q.includes("absent")) {
-    const injuryFactor = result.keyFactors.find((f) =>
-      f.factor.toLowerCase().includes("injur"),
-    );
-    return injuryFactor
-      ? `${injuryFactor.detail}. This is a key reason confidence is ${result.confidence}.`
-      : "No major injury signal stood out in the data used for this analysis.";
-  }
-
-  if (q.includes("home") || q.includes("away") || q.includes("why")) {
-    return `The model leans ${homePct}% home because of form, table position, and availability. ${result.narrative}`;
-  }
-
-  return `${result.tradingInsight} Ask about injuries, Polymarket divergence, or home/away bias for more detail.`;
-}
-
 export async function answerFollowUp(
   question: string,
   result: AnalysisResult,
 ): Promise<string> {
-  const prompt = buildFollowUpPrompt(result, question);
-
-  if (hasZerogCompute()) {
-    return runZerogChat(prompt);
+  if (!hasZerogCompute()) {
+    throw new Error("0G Compute is not configured. Set ZEROG_ROUTER_API_KEY.");
   }
 
-  return runDemoChat(question, result);
+  const prompt = buildFollowUpPrompt(result, question);
+  return runZerogChat(prompt);
 }

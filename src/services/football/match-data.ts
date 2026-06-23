@@ -1,5 +1,4 @@
-import { getDemoMatchData } from "@/lib/demo-data";
-import { hasApiFootball } from "@/lib/env";
+import { getSeasonForLeague } from "@/lib/leagues";
 import type {
   FixtureSummary,
   HeadToHeadMatch,
@@ -102,11 +101,7 @@ async function fetchRecentForm(
 export async function buildMatchDataBundle(
   fixture: FixtureSummary,
 ): Promise<MatchDataBundle> {
-  if (!hasApiFootball()) {
-    return getDemoMatchData(fixture);
-  }
-
-  const season = new Date(fixture.date).getFullYear();
+  const season = getSeasonForLeague(fixture.league.id);
 
   const [h2hData, injuriesData, standingsData, homeForm, awayForm] =
     await Promise.all([

@@ -7,20 +7,25 @@ import {
 } from "@/lib/env";
 
 export async function GET() {
+  const apiFootball = hasApiFootball();
+  const zerogCompute = hasZerogCompute();
+
   return NextResponse.json({
     status: "ok",
     storage: "browser-local",
     services: {
-      apiFootball: hasApiFootball(),
-      zerogCompute: hasZerogCompute(),
+      apiFootball,
+      zerogCompute,
       openWeather: hasOpenWeather(),
       polymarket: true,
     },
     mode:
-      hasApiFootball() && hasZerogCompute()
+      apiFootball && zerogCompute
         ? "live"
-        : hasApiFootball()
+        : apiFootball
           ? "football-only"
-          : "demo",
+          : zerogCompute
+            ? "compute-only"
+            : "unconfigured",
   });
 }

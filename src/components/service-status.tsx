@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 interface HealthResponse {
-  mode: "live" | "football-only" | "demo";
+  mode: "live" | "football-only" | "compute-only" | "unconfigured";
   services: {
     apiFootball: boolean;
     zerogCompute: boolean;
@@ -15,7 +15,8 @@ interface HealthResponse {
 const MODE_LABELS: Record<HealthResponse["mode"], string> = {
   live: "Live",
   "football-only": "Football only",
-  demo: "Demo",
+  "compute-only": "AI only",
+  unconfigured: "Setup required",
 };
 
 export function ServiceStatus() {
@@ -32,8 +33,14 @@ export function ServiceStatus() {
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="bg-accent/15 text-accent rounded-full px-3 py-1 text-xs font-semibold">
-        {MODE_LABELS[health.mode]} mode
+      <span
+        className={`rounded-full px-3 py-1 text-xs font-semibold ${
+          health.mode === "live"
+            ? "bg-accent/15 text-accent"
+            : "bg-warning/15 text-warning"
+        }`}
+      >
+        {MODE_LABELS[health.mode]}
       </span>
       <StatusPill label="API-Football" active={health.services.apiFootball} />
       <StatusPill label="0G Compute" active={health.services.zerogCompute} />

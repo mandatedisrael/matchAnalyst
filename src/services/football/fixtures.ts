@@ -1,6 +1,8 @@
-import { DEMO_FIXTURES } from "@/lib/demo-data";
-import { SUPPORTED_LEAGUES } from "@/lib/leagues";
-import { hasApiFootball } from "@/lib/env";
+import {
+  getSeasonForLeague,
+  SUPPORTED_LEAGUES,
+  WORLD_CUP_LEAGUE_ID,
+} from "@/lib/leagues";
 import type { FixtureSummary } from "@/types/fixture";
 import { footballFetch } from "@/services/football/client";
 
@@ -27,6 +29,17 @@ interface FixturesResponse {
   response: ApiFootballFixture[];
 }
 
+const LIVE_STATUSES = new Set([
+  "LIVE",
+  "1H",
+  "HT",
+  "2H",
+  "ET",
+  "BT",
+  "P",
+  "INT",
+]);
+
 function mapFixture(item: ApiFootballFixture): FixtureSummary {
   return {
     id: item.fixture.id,
@@ -52,22 +65,51 @@ function mapFixture(item: ApiFootballFixture): FixtureSummary {
   };
 }
 
+async function fetchLiveFixtures(leagueId?: number): Promise<FixtureSummary[]> {
+  const data = await footballFetch<FixturesResponse>("/fixtures", {
+    live: "all",
+  });
+
+  let fixtures = data.response.map(mapFixture);
+  if (leagueId) {
+    fixtures = fixtures.filter((fixture) => fixture.league.id === leagueId);
+  }
+
+  return fixtures;
+}
+
 async function fetchLeagueFixtures(
   leagueId: number,
   from: string,
   to: string,
-  season: number,
 ): Promise<FixtureSummary[]> {
+  const season = getSeasonForLeague(leagueId);
   const data = await footballFetch<FixturesResponse>("/fixtures", {
     league: leagueId,
     season,
     from,
     to,
     timezone: "UTC",
-    status: "NS",
   });
 
   return data.response.map(mapFixture);
+}
+
+function dedupeFixtures(fixtures: FixtureSummary[]): FixtureSummary[] {
+  const byId = new Map<number, FixtureSummary>();
+  for (const fixture of fixtures) {
+    byId.set(fixture.id, fixture);
+  }
+  return [...byId.values()];
+}
+
+function sortFixtures(fixtures: FixtureSummary[]): FixtureSummary[] {
+  return fixtures.sort((a, b) => {
+    const aLive = LIVE_STATUSES.has(a.status) ? 0 : 1;
+    const bLive = LIVE_STATUSES.has(b.status) ? 0 : 1;
+    if (aLive !== bLive) return aLive - bLive;
+    return new Date(a.date).getTime() - new Date(b.date).getTime();
+  });
 }
 
 function filterFixtures(
@@ -91,9 +133,7 @@ function filterFixtures(
     );
   }
 
-  return filtered
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    .slice(0, 40);
+  return sortFixtures(filtered).slice(0, 40);
 }
 
 export async function searchFixtures(options: {
@@ -101,37 +141,41 @@ export async function searchFixtures(options: {
   leagueId?: number;
   days?: number;
 }): Promise<FixtureSummary[]> {
-  if (!hasApiFootball()) {
-    return filterFixtures(DEMO_FIXTURES, options.query, options.leagueId);
-  }
-
-  const days = options.days ?? 7;
-  const from = new Date().toISOString().slice(0, 10);
+  const days = options.days ?? 14;
+  const from = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
   const to = new Date(Date.now() + days * 24 * 60 * 60 * 1000)
     .toISOString()
     .slice(0, 10);
-  const season = new Date().getFullYear();
 
+  const defaultToWorldCup = !options.query && !options.leagueId;
   const leagueIds = options.leagueId
     ? [options.leagueId]
-    : SUPPORTED_LEAGUES.map((league) => league.id);
+    : options.query
+      ? SUPPORTED_LEAGUES.map((league) => league.id)
+      : [WORLD_CUP_LEAGUE_ID];
 
-  const batches = await Promise.all(
-    leagueIds.map((leagueId) =>
-      fetchLeagueFixtures(leagueId, from, to, season).catch(() => []),
+  const liveLeagueFilter = defaultToWorldCup ? WORLD_CUP_LEAGUE_ID : options.leagueId;
+
+  const [liveFixtures, ...batches] = await Promise.all([
+    fetchLiveFixtures(liveLeagueFilter).catch(() => []),
+    ...leagueIds.map((leagueId) =>
+      fetchLeagueFixtures(leagueId, from, to).catch(() => []),
     ),
-  );
+  ]);
 
-  return filterFixtures(batches.flat(), options.query, options.leagueId);
+  const merged = dedupeFixtures([...liveFixtures, ...batches.flat()]);
+  return filterFixtures(
+    merged,
+    options.query,
+    options.leagueId ?? (defaultToWorldCup ? WORLD_CUP_LEAGUE_ID : undefined),
+  );
 }
 
 export async function getFixtureById(
   fixtureId: number,
 ): Promise<FixtureSummary | null> {
-  if (!hasApiFootball()) {
-    return DEMO_FIXTURES.find((f) => f.id === fixtureId) ?? null;
-  }
-
   const data = await footballFetch<FixturesResponse>("/fixtures", {
     id: fixtureId,
   });

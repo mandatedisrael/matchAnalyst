@@ -7,10 +7,7 @@ import { getFixtureById } from "@/services/football/fixtures";
 import { buildMatchDataBundle } from "@/services/football/match-data";
 import { resolvePolymarketMarket } from "@/services/polymarket/markets";
 import { fetchWeatherForVenue } from "@/services/weather/openweather";
-import {
-  runDemoAnalysis,
-  runZerogAnalysis,
-} from "@/services/zerog/compute";
+import { runZerogAnalysis } from "@/services/zerog/compute";
 import type { AnalysisResult } from "@/types/analysis";
 import type { AnalysisProgressStep } from "@/types/stream";
 
@@ -23,6 +20,10 @@ export async function analyzeFixture(
   fixtureId: number,
   onProgress?: ProgressCallback,
 ): Promise<AnalysisResult> {
+  if (!hasZerogCompute()) {
+    throw new Error("0G Compute is not configured. Set ZEROG_ROUTER_API_KEY.");
+  }
+
   onProgress?.("fixture", "Resolving fixture…");
   const fixture = await getFixtureById(fixtureId);
   if (!fixture) {
@@ -40,17 +41,9 @@ export async function analyzeFixture(
     matchData.weather = await fetchWeatherForVenue(fixture.venue);
   }
 
-  onProgress?.(
-    "inference",
-    hasZerogCompute()
-      ? "Running 0G Compute analyst…"
-      : "Generating demo analysis…",
-  );
+  onProgress?.("inference", "Running 0G AI analyst…");
 
-  const analystOutput = hasZerogCompute()
-    ? await runZerogAnalysis(matchData, polymarket)
-    : runDemoAnalysis(matchData, polymarket);
-
+  const analystOutput = await runZerogAnalysis(matchData, polymarket);
   const probabilities = normalizeProbabilities(analystOutput.probabilities);
 
   onProgress?.("complete", "Analysis complete.");
@@ -67,6 +60,6 @@ export async function analyzeFixture(
     matchData,
     polymarket: polymarket.found ? polymarket : undefined,
     analyzedAt: new Date().toISOString(),
-    source: hasZerogCompute() ? "0g-compute" : "demo",
+    source: "0g-compute",
   };
 }

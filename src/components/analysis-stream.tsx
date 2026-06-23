@@ -24,7 +24,7 @@ export function AnalysisStream({
         </div>
         {result && (
           <span className="bg-accent-soft text-accent rounded-full px-3 py-1 font-mono text-xs">
-            {result.source === "0g-compute" ? "0G Compute" : "Demo"}
+            0G AI
           </span>
         )}
       </div>

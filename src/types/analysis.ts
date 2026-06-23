@@ -36,7 +36,7 @@ export interface AnalysisResult {
   matchData: MatchDataBundle;
   polymarket?: PolymarketMarketContext;
   analyzedAt: string;
-  source: "0g-compute" | "demo";
+  source: "0g-compute";
 }
 
 export interface SavedAnalysis {

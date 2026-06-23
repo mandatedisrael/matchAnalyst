@@ -31,5 +31,5 @@ export const analyzeRequestSchema = z.object({
 export const fixtureSearchSchema = z.object({
   query: z.string().trim().min(2).max(80).optional(),
   leagueId: z.coerce.number().int().positive().optional(),
-  days: z.coerce.number().int().min(1).max(14).default(7),
+  days: z.coerce.number().int().min(1).max(30).default(14),
 });

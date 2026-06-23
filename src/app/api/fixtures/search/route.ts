@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { fixtureSearchSchema } from "@/lib/schemas/analysis";
+import { FootballApiError } from "@/services/football/client";
 import { searchFixtures } from "@/services/football/fixtures";
 
 export async function GET(request: Request) {
@@ -18,6 +19,16 @@ export async function GET(request: Request) {
     );
   }
 
-  const fixtures = await searchFixtures(parsed.data);
-  return NextResponse.json({ fixtures });
+  try {
+    const fixtures = await searchFixtures(parsed.data);
+    return NextResponse.json({ fixtures });
+  } catch (error) {
+    if (error instanceof FootballApiError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
+
+    const message =
+      error instanceof Error ? error.message : "Fixture search failed";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }

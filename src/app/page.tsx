@@ -8,6 +8,7 @@ import { SavedAnalyses } from "@/components/saved-analyses";
 import { ServiceStatus } from "@/components/service-status";
 import { useSavedAnalyses } from "@/hooks/use-local-store";
 import { deleteSavedAnalysis } from "@/lib/client/local-store";
+import { WORLD_CUP_LEAGUE_ID } from "@/lib/leagues";
 import type { SupportedLeague } from "@/lib/leagues";
 import type { AnalysisResult } from "@/types/analysis";
 import type { FixtureSummary } from "@/types/fixture";
@@ -16,7 +17,9 @@ import type { PolymarketMarketContext } from "@/types/polymarket";
 export default function HomePage() {
   const [query, setQuery] = useState("");
   const [leagues, setLeagues] = useState<SupportedLeague[]>([]);
-  const [selectedLeagueId, setSelectedLeagueId] = useState<number | null>(null);
+  const [selectedLeagueId, setSelectedLeagueId] = useState<number>(
+    WORLD_CUP_LEAGUE_ID,
+  );
   const [fixtures, setFixtures] = useState<FixtureSummary[]>([]);
   const [markets, setMarkets] = useState<
     Record<number, PolymarketMarketContext>
@@ -48,7 +51,7 @@ export default function HomePage() {
     try {
       const params = new URLSearchParams();
       if (query.trim()) params.set("query", query.trim());
-      if (selectedLeagueId) params.set("leagueId", String(selectedLeagueId));
+      params.set("leagueId", String(selectedLeagueId));
 
       const response = await fetch(`/api/fixtures/search?${params.toString()}`);
       const data = await response.json();
@@ -87,13 +90,25 @@ export default function HomePage() {
 
     async function loadInitialFixtures() {
       setIsSearching(true);
+      setError(null);
       try {
-        const response = await fetch("/api/fixtures/search");
+        const response = await fetch(
+          `/api/fixtures/search?leagueId=${WORLD_CUP_LEAGUE_ID}`,
+        );
         const data = await response.json();
-        if (!cancelled && response.ok) {
+        if (!cancelled) {
+          if (!response.ok) {
+            throw new Error(data.error ?? "Fixture search failed");
+          }
           const nextFixtures: FixtureSummary[] = data.fixtures ?? [];
           setFixtures(nextFixtures);
           void loadMarkets(nextFixtures);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(
+            err instanceof Error ? err.message : "Fixture search failed",
+          );
         }
       } finally {
         if (!cancelled) setIsSearching(false);
@@ -106,6 +121,11 @@ export default function HomePage() {
     };
   }, [loadMarkets]);
 
+  const sectionTitle =
+    selectedLeagueId === WORLD_CUP_LEAGUE_ID
+      ? "World Cup 2026"
+      : leagues.find((l) => l.id === selectedLeagueId)?.name ?? "Matches";
+
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-5 py-10 sm:px-8">
       <MatchSearchHeader
@@ -114,26 +134,31 @@ export default function HomePage() {
         selectedLeagueId={selectedLeagueId}
         isSearching={isSearching}
         onQueryChange={setQuery}
-        onLeagueChange={setSelectedLeagueId}
+        onLeagueChange={(id) => setSelectedLeagueId(id ?? WORLD_CUP_LEAGUE_ID)}
         onSearch={searchFixtures}
       />
 
       <ServiceStatus />
 
       {error && (
-        <p className="text-negative mt-4 text-sm">{error}</p>
+        <div className="card text-negative mt-4 p-4 text-sm">{error}</div>
       )}
 
       <section className="mt-8">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-lg font-semibold">
-            {isSearching ? "Loading matches…" : `${fixtures.length} matches`}
+            {isSearching ? "Loading matches…" : sectionTitle}
           </h2>
+          {!isSearching && fixtures.length > 0 && (
+            <span className="text-muted text-sm">{fixtures.length} fixtures</span>
+          )}
         </div>
 
-        {fixtures.length === 0 && !isSearching && (
+        {fixtures.length === 0 && !isSearching && !error && (
           <div className="card py-16 text-center">
-            <p className="text-muted text-sm">No fixtures found. Try a different search.</p>
+            <p className="text-muted text-sm">
+              No fixtures found for this league. Try another search.
+            </p>
           </div>
         )}
 
