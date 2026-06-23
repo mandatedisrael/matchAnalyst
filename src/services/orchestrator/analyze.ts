@@ -12,29 +12,48 @@ import {
   runZerogAnalysis,
 } from "@/services/zerog/compute";
 import type { AnalysisResult } from "@/types/analysis";
+import type { AnalysisProgressStep } from "@/types/stream";
+
+export type ProgressCallback = (
+  step: AnalysisProgressStep,
+  message: string,
+) => void;
 
 export async function analyzeFixture(
   fixtureId: number,
+  onProgress?: ProgressCallback,
 ): Promise<AnalysisResult> {
+  onProgress?.("fixture", "Resolving fixture…");
   const fixture = await getFixtureById(fixtureId);
   if (!fixture) {
     throw new Error(`Fixture ${fixtureId} not found`);
   }
 
-  const [matchData, polymarket] = await Promise.all([
-    buildMatchDataBundle(fixture),
-    resolvePolymarketMarket(fixture),
-  ]);
+  onProgress?.("football", "Fetching form, H2H, injuries, and standings…");
+  const matchData = await buildMatchDataBundle(fixture);
+
+  onProgress?.("polymarket", "Checking Polymarket for market context…");
+  const polymarket = await resolvePolymarketMarket(fixture);
 
   if (fixture.venue) {
+    onProgress?.("weather", "Loading venue weather context…");
     matchData.weather = await fetchWeatherForVenue(fixture.venue);
   }
+
+  onProgress?.(
+    "inference",
+    hasZerogCompute()
+      ? "Running 0G Compute analyst…"
+      : "Generating demo analysis…",
+  );
 
   const analystOutput = hasZerogCompute()
     ? await runZerogAnalysis(matchData, polymarket)
     : runDemoAnalysis(matchData, polymarket);
 
   const probabilities = normalizeProbabilities(analystOutput.probabilities);
+
+  onProgress?.("complete", "Analysis complete.");
 
   return {
     fixtureId,

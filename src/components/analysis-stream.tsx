@@ -5,9 +5,14 @@ import type { AnalysisResult } from "@/types/analysis";
 interface AnalysisStreamProps {
   result: AnalysisResult | null;
   isLoading: boolean;
+  progressMessage?: string | null;
 }
 
-export function AnalysisStream({ result, isLoading }: AnalysisStreamProps) {
+export function AnalysisStream({
+  result,
+  isLoading,
+  progressMessage,
+}: AnalysisStreamProps) {
   return (
     <section className="bg-surface border-border rounded-2xl border p-6">
       <div className="mb-4 flex items-center justify-between gap-3">
@@ -29,7 +34,9 @@ export function AnalysisStream({ result, isLoading }: AnalysisStreamProps) {
           <div className="bg-surface-elevated h-4 w-3/4 animate-pulse rounded" />
           <div className="bg-surface-elevated h-4 w-full animate-pulse rounded" />
           <div className="bg-surface-elevated h-4 w-5/6 animate-pulse rounded" />
-          <p className="text-muted text-sm">Fetching form, injuries, and context…</p>
+          <p className="text-muted text-sm">
+            {progressMessage ?? "Fetching form, injuries, and context…"}
+          </p>
         </div>
       )}
 
