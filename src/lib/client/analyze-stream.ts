@@ -1,10 +1,10 @@
 import type { AnalysisResult } from "@/types/analysis";
-import type { AnalysisStreamEvent } from "@/types/stream";
+import type { AnalysisProgressStep, AnalysisStreamEvent } from "@/types/stream";
 
 export async function runAnalysisStream(
   fixtureId: number,
   handlers: {
-    onProgress: (message: string) => void;
+    onProgress: (step: AnalysisProgressStep, message: string) => void;
     onResult: (result: AnalysisResult) => void;
     onError: (message: string) => void;
   },
@@ -47,7 +47,7 @@ export async function runAnalysisStream(
       const payload = JSON.parse(dataLine.slice(6)) as AnalysisStreamEvent;
 
       if (payload.type === "progress") {
-        handlers.onProgress(payload.message);
+        handlers.onProgress(payload.step, payload.message);
       } else if (payload.type === "result") {
         handlers.onResult(payload.result);
       } else if (payload.type === "error") {
