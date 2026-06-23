@@ -1,4 +1,5 @@
 import { env, hasZerogRouter } from "@/lib/env";
+import { resolveZerogRouterModel } from "@/lib/zerog-models";
 
 interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -28,8 +29,10 @@ export async function routerChatCompletion(
     throw new Error("ZEROG_ROUTER_API_KEY is not configured");
   }
 
+  const model = resolveZerogRouterModel(env.zerogRouterModel);
+
   const body: Record<string, unknown> = {
-    model: env.zerogRouterModel,
+    model,
     messages: options.messages,
     temperature: options.temperature ?? 0.4,
     stream: false,
@@ -53,6 +56,13 @@ export async function routerChatCompletion(
   if (!response.ok) {
     const message =
       data.error?.message ?? `Router request failed (${response.status})`;
+
+    if (message.includes("Model not found")) {
+      throw new Error(
+        `0G model "${model}" is not available. Set ZEROG_ROUTER_MODEL to a valid id (e.g. glm-5.1). See GET /v1/models on the 0G Router API.`,
+      );
+    }
+
     throw new Error(message);
   }
 

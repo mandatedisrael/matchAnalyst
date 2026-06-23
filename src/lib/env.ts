@@ -1,3 +1,5 @@
+import { DEFAULT_ZEROG_ROUTER_MODEL } from "@/lib/zerog-models";
+
 function optional(name: string, fallback = ""): string {
   return process.env[name] ?? fallback;
 }
@@ -16,7 +18,7 @@ export const env = {
     "ZEROG_ROUTER_BASE_URL",
     "https://router-api.0g.ai/v1",
   ),
-  zerogRouterModel: optional("ZEROG_ROUTER_MODEL", "zai-org/GLM-5-FP8"),
+  zerogRouterModel: optional("ZEROG_ROUTER_MODEL", DEFAULT_ZEROG_ROUTER_MODEL),
   appUrl: optional("NEXT_PUBLIC_APP_URL", "http://localhost:3000"),
 } as const;
 

@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 
-import {
-  hasApiFootball,
-  hasOpenWeather,
-  hasZerogCompute,
-} from "@/lib/env";
+import { env, hasApiFootball, hasOpenWeather, hasZerogCompute } from "@/lib/env";
+import { resolveZerogRouterModel } from "@/lib/zerog-models";
 
 export async function GET() {
   const apiFootball = hasApiFootball();
@@ -27,5 +24,8 @@ export async function GET() {
           : zerogCompute
             ? "compute-only"
             : "unconfigured",
+    zerogRouterModel: zerogCompute
+      ? resolveZerogRouterModel(env.zerogRouterModel)
+      : null,
   });
 }
