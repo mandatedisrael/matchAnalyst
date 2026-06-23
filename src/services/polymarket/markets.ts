@@ -3,63 +3,60 @@ import { hasApiFootball } from "@/lib/env";
 import type { FixtureSummary } from "@/types/fixture";
 import type { PolymarketMarketContext } from "@/types/polymarket";
 import { gammaFetch } from "@/services/polymarket/client";
+import {
+  parseMarketOutcomes,
+  pickBestEvent,
+  pickMatchWinnerMarket,
+} from "@/services/polymarket/matching";
+import {
+  searchPolymarketEvents,
+  type GammaEvent,
+} from "@/services/polymarket/search";
 
-interface GammaMarket {
-  id: string;
-  question: string;
-  slug: string;
-  outcomes: string;
-  outcomePrices: string;
-  volume?: string;
-  liquidity?: string;
-  active?: boolean;
+function emptyMarket(): PolymarketMarketContext {
+  return {
+    found: false,
+    marketType: "match_winner",
+    outcomes: [],
+    fetchedAt: new Date().toISOString(),
+  };
 }
 
-interface GammaEvent {
-  id: string;
-  title: string;
-  slug: string;
-  markets?: GammaMarket[];
-  volume?: number;
-  liquidity?: number;
+function mapEventToMarket(
+  event: GammaEvent,
+  fixture: FixtureSummary,
+): PolymarketMarketContext {
+  const market = pickMatchWinnerMarket(event.markets);
+  if (!market) return emptyMarket();
+
+  const volumeUsd = Number(
+    market.volumeNum ?? market.volume ?? event.volume ?? 0,
+  );
+  const liquidityUsd = Number(
+    market.liquidityNum ?? market.liquidity ?? event.liquidity ?? 0,
+  );
+
+  return {
+    found: true,
+    slug: market.slug,
+    title: market.question || event.title,
+    marketType: "match_winner",
+    volumeUsd,
+    liquidityUsd,
+    outcomes: parseMarketOutcomes(market),
+    fetchedAt: new Date().toISOString(),
+    url: `https://polymarket.com/event/${event.slug}`,
+    lowLiquidity: liquidityUsd > 0 && liquidityUsd < 5000,
+  };
 }
 
-function parseOutcomes(market: GammaMarket) {
-  const labels: string[] = JSON.parse(market.outcomes || "[]");
-  const prices: string[] = JSON.parse(market.outcomePrices || "[]");
-
-  return labels.map((label, index) => {
-    const price = Number(prices[index] ?? 0);
-    return {
-      label,
-      price,
-      impliedProbability: price,
-    };
-  });
-}
-
-function normalize(text: string): string {
-  return text.toLowerCase().replace(/[^a-z0-9\s]/g, "").trim();
-}
-
-function eventMatchesFixture(event: GammaEvent, fixture: FixtureSummary): boolean {
-  const title = normalize(event.title);
-  const home = normalize(fixture.homeTeam.name);
-  const away = normalize(fixture.awayTeam.name);
-  return title.includes(home) && title.includes(away);
-}
-
-function pickMatchWinnerMarket(markets: GammaMarket[] = []): GammaMarket | null {
-  const winner = markets.find((m) => {
-    const q = m.question.toLowerCase();
-    return (
-      q.includes("win") ||
-      q.includes("winner") ||
-      q.includes("match result")
-    );
-  });
-
-  return winner ?? markets[0] ?? null;
+async function fetchEventBySlug(slug: string): Promise<GammaEvent | null> {
+  try {
+    const event = await gammaFetch<GammaEvent>(`/events/slug/${slug}`);
+    return event ?? null;
+  } catch {
+    return null;
+  }
 }
 
 export async function resolvePolymarketMarket(
@@ -70,54 +67,31 @@ export async function resolvePolymarketMarket(
   }
 
   try {
-    const events = await gammaFetch<GammaEvent[]>("/events", {
-      active: "true",
-      closed: "false",
-      limit: 100,
-      tag: "soccer",
-    });
+    const searchResults = await searchPolymarketEvents(fixture);
+    let matched = pickBestEvent(searchResults, fixture);
 
-    const matched = events.find((event) => eventMatchesFixture(event, fixture));
+    if (matched?.slug && (!matched.markets || matched.markets.length === 0)) {
+      matched = (await fetchEventBySlug(matched.slug)) ?? matched;
+    }
+
     if (!matched) {
-      return {
-        found: false,
-        marketType: "match_winner",
-        outcomes: [],
-        fetchedAt: new Date().toISOString(),
-      };
+      const tagged = await gammaFetch<GammaEvent[]>("/events", {
+        active: "true",
+        closed: "false",
+        limit: 150,
+        tag: "soccer",
+      });
+
+      matched = pickBestEvent(tagged, fixture);
+      if (matched?.slug && (!matched.markets || matched.markets.length === 0)) {
+        matched = (await fetchEventBySlug(matched.slug)) ?? matched;
+      }
     }
 
-    const market = pickMatchWinnerMarket(matched.markets);
-    if (!market) {
-      return {
-        found: false,
-        marketType: "match_winner",
-        outcomes: [],
-        fetchedAt: new Date().toISOString(),
-      };
-    }
+    if (!matched) return emptyMarket();
 
-    const volumeUsd = Number(market.volume ?? matched.volume ?? 0);
-    const liquidityUsd = Number(market.liquidity ?? matched.liquidity ?? 0);
-
-    return {
-      found: true,
-      slug: market.slug,
-      title: market.question || matched.title,
-      marketType: "match_winner",
-      volumeUsd,
-      liquidityUsd,
-      outcomes: parseOutcomes(market),
-      fetchedAt: new Date().toISOString(),
-      url: `https://polymarket.com/event/${matched.slug}`,
-      lowLiquidity: liquidityUsd > 0 && liquidityUsd < 5000,
-    };
+    return mapEventToMarket(matched, fixture);
   } catch {
-    return {
-      found: false,
-      marketType: "match_winner",
-      outcomes: [],
-      fetchedAt: new Date().toISOString(),
-    };
+    return emptyMarket();
   }
 }
