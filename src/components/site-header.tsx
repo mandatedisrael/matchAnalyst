@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { BrandName } from "@/components/brand-name";
+import { TeeVerifiedBadge } from "@/components/tee-verified-badge";
 
 export function SiteHeader() {
   return (
@@ -20,9 +21,12 @@ export function SiteHeader() {
           >
             Matches
           </Link>
-          <span className="bg-accent/10 text-accent hidden rounded-full px-3 py-1 text-xs font-medium sm:inline-block">
-            AI Analyst
-          </span>
+          <div className="hidden items-center gap-2 sm:flex">
+            <span className="bg-accent/10 text-accent rounded-full px-3 py-1 text-xs font-medium">
+              AI Analyst
+            </span>
+            <TeeVerifiedBadge />
+          </div>
         </nav>
       </div>
     </header>

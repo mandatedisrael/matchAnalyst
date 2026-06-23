@@ -2,6 +2,8 @@
 
 import { useCallback, useState } from "react";
 
+import { TeeVerifiedBadge } from "@/components/tee-verified-badge";
+import { isTeeVerified } from "@/lib/tee-verified";
 import type { AnalysisResult } from "@/types/analysis";
 
 interface ChatMessage {
@@ -61,6 +63,8 @@ export function AskAnalyst({ result }: AskAnalystProps) {
     [result, isLoading],
   );
 
+  const teeVerified = result ? isTeeVerified(result) : false;
+
   if (!result) {
     return (
       <section className="card p-6">
@@ -74,11 +78,14 @@ export function AskAnalyst({ result }: AskAnalystProps) {
 
   return (
     <section className="card flex flex-col p-6">
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold">Ask analyst</h2>
-        <p className="text-muted text-sm">
-          Follow-up questions grounded in the current analysis
-        </p>
+      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-semibold">Ask analyst</h2>
+          <p className="text-muted text-sm">
+            Follow-up questions grounded in the current analysis
+          </p>
+        </div>
+        {teeVerified && <TeeVerifiedBadge />}
       </div>
 
       <div className="mb-4 flex flex-wrap gap-2">
@@ -104,13 +111,24 @@ export function AskAnalyst({ result }: AskAnalystProps) {
         {messages.map((message, index) => (
           <div
             key={`${message.role}-${index}`}
-            className={`max-w-[90%] rounded-xl px-4 py-3 text-sm leading-6 ${
-              message.role === "user"
-                ? "bg-accent/15 text-foreground ml-auto"
-                : "bg-surface-elevated"
+            className={`max-w-[90%] ${
+              message.role === "user" ? "ml-auto" : ""
             }`}
           >
-            {message.content}
+            {message.role === "assistant" && teeVerified && (
+              <div className="mb-1.5">
+                <TeeVerifiedBadge />
+              </div>
+            )}
+            <div
+              className={`rounded-xl px-4 py-3 text-sm leading-6 ${
+                message.role === "user"
+                  ? "bg-accent/15 text-foreground"
+                  : "bg-surface-elevated"
+              }`}
+            >
+              {message.content}
+            </div>
           </div>
         ))}
         {isLoading && (

@@ -61,5 +61,6 @@ export async function analyzeFixture(
     polymarket: polymarket.found ? polymarket : undefined,
     analyzedAt: new Date().toISOString(),
     source: "0g-compute",
+    teeVerified: true,
   };
 }

@@ -5,7 +5,9 @@ import { FactorChart } from "@/components/charts/factor-chart";
 import { FormTrendChart } from "@/components/charts/form-trend-chart";
 import { H2HChart } from "@/components/charts/h2h-chart";
 import { ProbabilityChart } from "@/components/charts/probability-chart";
+import { TeeVerifiedBadge, TeeVerifiedCallout } from "@/components/tee-verified-badge";
 import { formatDelta, formatPercent } from "@/lib/probability";
+import { isTeeVerified } from "@/lib/tee-verified";
 import type { AnalysisResult } from "@/types/analysis";
 import type { PolymarketMarketContext } from "@/types/polymarket";
 
@@ -33,6 +35,7 @@ export function AnalysisResultsPanel({
   const winProb = (
     Math.max(result.probabilities.home, result.probabilities.away) * 100
   ).toFixed(1);
+  const teeVerified = isTeeVerified(result);
 
   return (
     <section className="space-y-5">
@@ -42,12 +45,17 @@ export function AnalysisResultsPanel({
             <span className="bg-positive h-2 w-2 rounded-full" aria-hidden />
             <h2 className="text-sm font-semibold">Analysis complete</h2>
           </div>
-          <span className="bg-accent/10 text-accent rounded-full px-3 py-1 font-mono text-xs font-medium">
-            0G AI
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="bg-surface-elevated text-muted rounded-full px-3 py-1 font-mono text-xs font-medium">
+              0G AI
+            </span>
+            {teeVerified && <TeeVerifiedBadge size="md" />}
+          </div>
         </div>
 
         <AnalysisSourcePills complete />
+
+        {teeVerified && <TeeVerifiedCallout className="mt-5" />}
 
         <div className="mt-6 grid grid-cols-3 gap-3 sm:max-w-lg">
           <MetricTile label="Win prob" value={`${winProb}%`} />

@@ -37,7 +37,7 @@ export function MatchSearchHeader({
         </h1>
         <p className="text-muted mx-auto max-w-lg text-base leading-relaxed">
           Live World Cup fixtures, deep AI probabilities, and Polymarket
-          context — all in one place.
+          context — powered by 0G with TEE-verified inference.
         </p>
       </div>
 

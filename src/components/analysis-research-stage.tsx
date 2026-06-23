@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { AnalysisSourcePills } from "@/components/analysis-source-pills";
+import { TeeVerifiedBadge } from "@/components/tee-verified-badge";
 import type { AnalysisProgressStep } from "@/types/stream";
 
 const STEP_HINTS: Record<AnalysisProgressStep, string[]> = {
@@ -67,9 +68,12 @@ export function AnalysisResearchStage({
   return (
     <section className="space-y-5" aria-live="polite" aria-busy="true">
       <div className="card p-6 sm:p-8">
-        <div className="mb-5 flex items-center gap-2">
-          <span className="analysis-live-dot" aria-hidden />
-          <h2 className="text-sm font-semibold">Running analysis</h2>
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="analysis-live-dot" aria-hidden />
+            <h2 className="text-sm font-semibold">Running analysis</h2>
+          </div>
+          {isInference && <TeeVerifiedBadge size="md" />}
         </div>
 
         <AnalysisSourcePills activeStep={step} />

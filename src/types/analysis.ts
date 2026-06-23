@@ -37,6 +37,7 @@ export interface AnalysisResult {
   polymarket?: PolymarketMarketContext;
   analyzedAt: string;
   source: "0g-compute";
+  teeVerified?: boolean;
 }
 
 export interface SavedAnalysis {
