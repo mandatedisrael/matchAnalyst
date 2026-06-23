@@ -113,40 +113,50 @@ export default function MatchDetailPage() {
   const upcoming = fixture ? isFixtureUpcoming(fixture) : false;
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-5 py-8 sm:px-8">
+    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-5 py-8 sm:px-8">
       <Link
         href="/"
-        className="editorial-label text-muted hover:text-foreground mb-8 inline-block"
+        className="text-muted hover:text-accent mb-8 inline-flex items-center gap-1.5 text-sm font-medium"
       >
         ← Back to matches
       </Link>
 
       {fixture && (
-        <header className="border-border mb-8 border-b pb-8">
-          <div className="mb-6 flex flex-wrap items-baseline justify-between gap-3">
-            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              {fixture.homeTeam.name} v {fixture.awayTeam.name}
-              {live && <span className="text-muted ml-2 text-lg">• LIVE</span>}
-            </h1>
-            {upcoming && !live && (
-              <span className="editorial-label text-muted">Upcoming</span>
-            )}
+        <header className="card mb-8 p-6 sm:p-8">
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-muted mb-2 text-sm">{fixture.league.name}</p>
+              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                {fixture.homeTeam.name}
+                <span className="text-muted mx-2 font-normal">vs</span>
+                {fixture.awayTeam.name}
+              </h1>
+            </div>
+            <div className="flex gap-2">
+              {live && (
+                <span className="bg-negative/15 text-negative live-pulse flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold">
+                  <span className="bg-negative h-1.5 w-1.5 rounded-full" />
+                  LIVE
+                </span>
+              )}
+              {upcoming && !live && (
+                <span className="bg-accent-soft text-accent rounded-full px-3 py-1 text-xs font-medium">
+                  Upcoming
+                </span>
+              )}
+            </div>
           </div>
 
-          <p className="text-muted mb-6 text-sm">
-            {fixture.league.name} ·{" "}
+          <p className="text-muted text-sm">
             {new Date(fixture.date).toLocaleString()} ·{" "}
             {fixture.venue ?? "Venue TBD"}
           </p>
 
           {preview && !result && (
-            <div className="grid grid-cols-3 gap-4">
-              <PreviewMetric label="Win Prob." value={`${preview.winProbability}%`} />
-              <PreviewMetric label="Volatility" value={preview.volatility} />
-              <PreviewMetric
-                label="Confidence"
-                value={preview.confidence.toUpperCase()}
-              />
+            <div className="mt-6 grid grid-cols-3 gap-3 sm:max-w-md">
+              <MetricCard label="Win prob" value={`${preview.winProbability}%`} />
+              <MetricCard label="Volatility" value={preview.volatility} />
+              <MetricCard label="Confidence" value={preview.confidence} />
             </div>
           )}
         </header>
@@ -161,23 +171,22 @@ export default function MatchDetailPage() {
         </div>
       )}
 
-      {error && <p className="text-negative mb-4 text-sm">{error}</p>}
+      {error && (
+        <div className="card text-negative mb-4 p-4 text-sm">{error}</div>
+      )}
 
       {result && (
-        <div className="space-y-8">
-          <div className="grid grid-cols-3 gap-4">
-            <PreviewMetric
-              label="Win Prob."
+        <div className="space-y-6">
+          <div className="grid grid-cols-3 gap-3 sm:max-w-lg">
+            <MetricCard
+              label="Win prob"
               value={`${(Math.max(result.probabilities.home, result.probabilities.away) * 100).toFixed(1)}%`}
             />
-            <PreviewMetric label="Volatility" value={preview?.volatility ?? "MED"} />
-            <PreviewMetric
-              label="Confidence"
-              value={result.confidence.toUpperCase()}
-            />
+            <MetricCard label="Volatility" value={preview?.volatility ?? "MED"} />
+            <MetricCard label="Confidence" value={result.confidence} />
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="grid gap-4 lg:grid-cols-2">
             <ProbabilityChart comparisons={result.comparisons} />
             <FormTrendChart
               homeTeam={result.matchData.fixture.homeTeam.name}
@@ -194,13 +203,13 @@ export default function MatchDetailPage() {
           </div>
 
           {market?.found && market.outcomes[0] && (
-            <div className="bg-foreground text-background inline-block px-4 py-3 text-sm">
-              <p className="editorial-label mb-1 text-background/70">
-                Polymarket Odds
-              </p>
-              <p className="font-medium">
-                {market.outcomes[0].label} / $
-                {market.outcomes[0].price.toFixed(2)}
+            <div className="card flex items-center justify-between p-4">
+              <div>
+                <p className="label mb-1">Polymarket odds</p>
+                <p className="font-medium">{market.outcomes[0].label}</p>
+              </div>
+              <p className="text-accent font-mono text-2xl font-bold">
+                ${market.outcomes[0].price.toFixed(2)}
               </p>
             </div>
           )}
@@ -229,11 +238,11 @@ export default function MatchDetailPage() {
   );
 }
 
-function PreviewMetric({ label, value }: { label: string; value: string }) {
+function MetricCard({ label, value }: { label: string; value: string }) {
   return (
-    <div>
-      <p className="metric-label mb-1">{label}</p>
-      <p className="text-2xl font-semibold tracking-tight">{value}</p>
+    <div className="bg-surface-elevated/60 rounded-xl px-4 py-3 text-center">
+      <p className="label mb-1">{label}</p>
+      <p className="text-xl font-bold">{value}</p>
     </div>
   );
 }

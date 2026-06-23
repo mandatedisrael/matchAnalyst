@@ -11,11 +11,11 @@ interface SavedAnalysesProps {
 
 export function SavedAnalyses({ items, onLoad, onDelete }: SavedAnalysesProps) {
   return (
-    <section className="bg-surface-elevated border-border border p-6">
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold">Saved Research</h2>
+    <section className="card p-6">
+      <div className="mb-5">
+        <h2 className="text-lg font-semibold">Saved research</h2>
         <p className="text-muted text-sm">
-          Stored in your browser — click to reload an analysis
+          Stored locally in your browser
         </p>
       </div>
 
@@ -25,44 +25,42 @@ export function SavedAnalyses({ items, onLoad, onDelete }: SavedAnalysesProps) {
         </p>
       )}
 
-      <ul className="grid gap-3">
+      <ul className="grid gap-3 sm:grid-cols-2">
         {items.map((item) => {
           const fixture = item.result.matchData.fixture;
           return (
             <li
               key={item.id}
-              className="bg-surface-elevated border-border rounded-xl border px-4 py-3"
+              className="bg-surface-elevated/50 hover:border-accent/30 rounded-xl border border-transparent p-4 transition"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <button
                   type="button"
                   onClick={() => onLoad(item.result)}
-                  className="text-left font-medium hover:text-accent transition"
+                  className="hover:text-accent text-left font-medium transition"
                 >
                   {fixture.homeTeam.name} vs {fixture.awayTeam.name}
                 </button>
-                <div className="flex items-center gap-3">
-                  <span className="text-muted text-xs">
-                    {new Date(item.savedAt).toLocaleString()}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => onDelete(item.id)}
-                    className="text-muted hover:text-negative text-xs"
-                  >
-                    Delete
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => onDelete(item.id)}
+                  className="text-muted hover:text-negative text-xs transition"
+                >
+                  Delete
+                </button>
               </div>
               <button
                 type="button"
                 onClick={() => onLoad(item.result)}
-                className="text-muted mt-1 block text-left font-mono text-xs hover:text-foreground"
+                className="text-muted hover:text-foreground mt-2 block text-left font-mono text-xs transition"
               >
-                Home {formatPercent(item.result.probabilities.home)} | Draw{" "}
-                {formatPercent(item.result.probabilities.draw)} | Away{" "}
+                H {formatPercent(item.result.probabilities.home)} · D{" "}
+                {formatPercent(item.result.probabilities.draw)} · A{" "}
                 {formatPercent(item.result.probabilities.away)}
               </button>
+              <p className="text-muted mt-1 text-xs">
+                {new Date(item.savedAt).toLocaleString()}
+              </p>
             </li>
           );
         })}

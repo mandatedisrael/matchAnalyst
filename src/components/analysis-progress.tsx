@@ -25,7 +25,11 @@ export function AnalysisProgress({
   const activeIndex = STEPS.findIndex((step) => step.id === activeStep);
 
   return (
-    <div className="bg-surface-elevated border-border rounded-xl border px-4 py-4">
+    <div className="card p-5">
+      <div className="mb-3 flex items-center gap-2">
+        <span className="bg-accent h-2 w-2 animate-pulse rounded-full" />
+        <p className="text-sm font-medium">Running analysis</p>
+      </div>
       <ol className="flex flex-wrap gap-2">
         {STEPS.map((step, index) => {
           const done = index < activeIndex;
@@ -36,10 +40,10 @@ export function AnalysisProgress({
               key={step.id}
               className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                 active
-                  ? "bg-accent text-white"
+                  ? "bg-accent text-zinc-950"
                   : done
                     ? "bg-positive/15 text-positive"
-                    : "bg-surface text-muted"
+                    : "bg-surface-elevated text-muted"
               }`}
             >
               {done ? "✓ " : ""}
@@ -49,7 +53,7 @@ export function AnalysisProgress({
         })}
       </ol>
       {message && (
-        <p className="text-muted mt-3 text-sm animate-pulse">{message}</p>
+        <p className="text-muted mt-3 text-sm">{message}</p>
       )}
     </div>
   );

@@ -107,7 +107,7 @@ export default function HomePage() {
   }, [loadMarkets]);
 
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-5 py-10 sm:px-8">
+    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-5 py-10 sm:px-8">
       <MatchSearchHeader
         query={query}
         leagues={leagues}
@@ -118,31 +118,49 @@ export default function HomePage() {
         onSearch={searchFixtures}
       />
 
-      <div className="mt-6">
-        <ServiceStatus />
-      </div>
+      <ServiceStatus />
 
       {error && (
         <p className="text-negative mt-4 text-sm">{error}</p>
       )}
 
-      <section className="mt-4">
+      <section className="mt-8">
+        <div className="mb-5 flex items-center justify-between">
+          <h2 className="text-lg font-semibold">
+            {isSearching ? "Loading matches…" : `${fixtures.length} matches`}
+          </h2>
+        </div>
+
         {fixtures.length === 0 && !isSearching && (
-          <p className="text-muted py-10 text-sm">No fixtures found.</p>
+          <div className="card py-16 text-center">
+            <p className="text-muted text-sm">No fixtures found. Try a different search.</p>
+          </div>
         )}
 
-        {fixtures.map((fixture, index) => (
-          <MatchFeedCard
-            key={fixture.id}
-            fixture={fixture}
-            market={markets[fixture.id]}
-            muted={index > 0 && index % 4 === 0}
-          />
-        ))}
+        {isSearching && fixtures.length === 0 && (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="card h-52 animate-pulse bg-surface-elevated/30"
+              />
+            ))}
+          </div>
+        )}
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          {fixtures.map((fixture) => (
+            <MatchFeedCard
+              key={fixture.id}
+              fixture={fixture}
+              market={markets[fixture.id]}
+            />
+          ))}
+        </div>
       </section>
 
       {savedItems.length > 0 && (
-        <div className="mt-10">
+        <div className="mt-12">
           <SavedAnalyses
             items={savedItems}
             onLoad={handleLoadSaved}
@@ -150,11 +168,6 @@ export default function HomePage() {
           />
         </div>
       )}
-
-      <p className="text-muted mt-12 border-border border-t pt-6 text-xs leading-6">
-        Research and analysis only. Not financial, betting, or investment
-        advice. Polymarket prices shown for market context when available.
-      </p>
     </main>
   );
 }

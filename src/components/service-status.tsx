@@ -13,9 +13,9 @@ interface HealthResponse {
 }
 
 const MODE_LABELS: Record<HealthResponse["mode"], string> = {
-  live: "Live mode",
-  "football-only": "Football data only",
-  demo: "Demo mode",
+  live: "Live",
+  "football-only": "Football only",
+  demo: "Demo",
 };
 
 export function ServiceStatus() {
@@ -31,9 +31,9 @@ export function ServiceStatus() {
   if (!health) return null;
 
   return (
-    <div className="bg-surface-elevated border-border flex flex-wrap items-center gap-2 border px-4 py-3 text-xs">
-      <span className="bg-accent-soft text-accent rounded-full px-3 py-1 font-medium">
-        {MODE_LABELS[health.mode]}
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="bg-accent/15 text-accent rounded-full px-3 py-1 text-xs font-semibold">
+        {MODE_LABELS[health.mode]} mode
       </span>
       <StatusPill label="API-Football" active={health.services.apiFootball} />
       <StatusPill label="0G Compute" active={health.services.zerogCompute} />
@@ -46,7 +46,7 @@ export function ServiceStatus() {
 function StatusPill({ label, active }: { label: string; active: boolean }) {
   return (
     <span
-      className={`rounded-full px-3 py-1 ${
+      className={`rounded-full px-3 py-1 text-xs font-medium ${
         active
           ? "bg-positive/10 text-positive"
           : "bg-surface-elevated text-muted"

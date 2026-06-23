@@ -12,6 +12,9 @@ import {
 
 import type { TeamForm } from "@/types/fixture";
 
+const GRID_COLOR = "rgba(255,255,255,0.06)";
+const TICK_COLOR = "#9ca3af";
+
 interface FormTrendChartProps {
   homeTeam: string;
   awayTeam: string;
@@ -45,28 +48,34 @@ export function FormTrendChart({
   }));
 
   return (
-    <div className="border-border bg-surface-elevated border p-4">
-      <p className="editorial-label text-muted mb-4">Form Trend (points)</p>
+    <div className="card p-5">
+      <p className="label mb-4">Form trend (points)</p>
       <div className="h-64 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e8e2d7" />
-            <XAxis dataKey="match" tick={{ fontSize: 12 }} />
-            <YAxis tick={{ fontSize: 12 }} />
-            <Tooltip />
+            <CartesianGrid strokeDasharray="3 3" stroke={GRID_COLOR} />
+            <XAxis dataKey="match" tick={{ fontSize: 12, fill: TICK_COLOR }} />
+            <YAxis tick={{ fontSize: 12, fill: TICK_COLOR }} />
+            <Tooltip
+              contentStyle={{
+                background: "#1a1d26",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: "0.75rem",
+              }}
+            />
             <Line
               type="monotone"
               dataKey={homeTeam}
-              stroke="#111111"
+              stroke="#34d399"
               strokeWidth={2}
-              dot={{ r: 3 }}
+              dot={{ r: 3, fill: "#34d399" }}
             />
             <Line
               type="monotone"
               dataKey={awayTeam}
-              stroke="#9a6700"
+              stroke="#38bdf8"
               strokeWidth={2}
-              dot={{ r: 3 }}
+              dot={{ r: 3, fill: "#38bdf8" }}
             />
           </LineChart>
         </ResponsiveContainer>
