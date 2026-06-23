@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { stashFixtureForNavigation } from "@/lib/client/fixture-session";
 import {
   buildMatchPreview,
   isFixtureLive,
@@ -24,6 +25,7 @@ export function MatchFeedCard({ fixture, market }: MatchFeedCardProps) {
   return (
     <Link
       href={`/match/${fixture.id}`}
+      onClick={() => stashFixtureForNavigation(fixture)}
       className="card card-hover group flex flex-col p-5 transition-transform hover:-translate-y-0.5"
     >
       <div className="mb-4 flex items-start justify-between gap-3">

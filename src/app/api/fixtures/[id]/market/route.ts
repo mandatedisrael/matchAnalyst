@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { FootballApiError } from "@/services/football/client";
 import { getFixtureById } from "@/services/football/fixtures";
 import { resolvePolymarketMarket } from "@/services/polymarket/markets";
 
@@ -11,15 +12,25 @@ export async function GET(_request: Request, context: RouteContext) {
   const { id } = await context.params;
   const fixtureId = Number(id);
 
-  if (!Number.isFinite(fixtureId)) {
+  if (!Number.isFinite(fixtureId) || fixtureId <= 0) {
     return NextResponse.json({ error: "Invalid fixture id" }, { status: 400 });
   }
 
-  const fixture = await getFixtureById(fixtureId);
-  if (!fixture) {
-    return NextResponse.json({ error: "Fixture not found" }, { status: 404 });
-  }
+  try {
+    const fixture = await getFixtureById(fixtureId);
+    if (!fixture) {
+      return NextResponse.json({ error: "Fixture not found" }, { status: 404 });
+    }
 
-  const market = await resolvePolymarketMarket(fixture);
-  return NextResponse.json({ market });
+    const market = await resolvePolymarketMarket(fixture);
+    return NextResponse.json({ market });
+  } catch (error) {
+    if (error instanceof FootballApiError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
+
+    const message =
+      error instanceof Error ? error.message : "Market lookup failed";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }

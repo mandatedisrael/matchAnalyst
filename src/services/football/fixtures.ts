@@ -160,15 +160,46 @@ export async function searchFixtures(options: {
   return { fixtures };
 }
 
+async function findFixtureInRecentDates(
+  fixtureId: number,
+): Promise<FixtureSummary | null> {
+  const dates: string[] = [];
+  const cursor = new Date();
+  cursor.setUTCDate(cursor.getUTCDate() - 2);
+
+  for (let i = 0; i < 16; i += 1) {
+    dates.push(cursor.toISOString().slice(0, 10));
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+  }
+
+  const [liveFixtures, datedFixtures] = await Promise.all([
+    fetchLiveFixtures().catch(() => []),
+    Promise.all(
+      dates.map((date) => fetchFixturesByDate(date).catch(() => [])),
+    ).then((batches) => batches.flat()),
+  ]);
+
+  const merged = dedupeFixtures([...liveFixtures, ...datedFixtures]);
+  return merged.find((fixture) => fixture.id === fixtureId) ?? null;
+}
+
 export async function getFixtureById(
   fixtureId: number,
 ): Promise<FixtureSummary | null> {
-  const data = await footballFetch<FixturesResponse>("/fixtures", {
-    id: fixtureId,
-  });
+  try {
+    const data = await footballFetch<FixturesResponse>(
+      "/fixtures",
+      { id: fixtureId },
+      { cache: "no-store" },
+    );
 
-  const item = data.response[0];
-  return item ? mapFixture(item) : null;
+    const item = data.response[0];
+    if (item) return mapFixture(item);
+  } catch {
+    // Fall back to the same date-scan strategy used by search.
+  }
+
+  return findFixtureInRecentDates(fixtureId);
 }
 
 export type { TeamSpotlight } from "./teams";

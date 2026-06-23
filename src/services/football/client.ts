@@ -12,9 +12,15 @@ export class FootballApiError extends Error {
   }
 }
 
+interface FootballFetchOptions {
+  cache?: RequestCache;
+  revalidate?: number | false;
+}
+
 export async function footballFetch<T>(
   path: string,
   params: Record<string, string | number | undefined> = {},
+  options: FootballFetchOptions = {},
 ): Promise<T> {
   if (!hasApiFootball()) {
     throw new FootballApiError("API_FOOTBALL_KEY is not configured", 503);
@@ -25,12 +31,19 @@ export async function footballFetch<T>(
     if (value !== undefined) url.searchParams.set(key, String(value));
   }
 
-  const response = await fetch(url, {
+  const fetchInit: RequestInit & { next?: { revalidate?: number | false } } = {
     headers: {
       "x-apisports-key": env.apiFootballKey,
     },
-    next: { revalidate: 900 },
-  });
+  };
+
+  if (options.cache === "no-store" || options.revalidate === false) {
+    fetchInit.cache = "no-store";
+  } else {
+    fetchInit.next = { revalidate: options.revalidate ?? 900 };
+  }
+
+  const response = await fetch(url, fetchInit);
 
   if (!response.ok) {
     throw new FootballApiError(

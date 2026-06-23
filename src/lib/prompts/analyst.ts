@@ -28,7 +28,9 @@ Volume: ${polymarket.volumeUsd ? `$${polymarket.volumeUsd.toLocaleString()}` : "
 
   return `Analyze this upcoming fixture and return JSON with:
 probabilities (home/draw/away as 0-1 decimals), confidence (low|medium|high),
-narrative (2-4 sentences), key_factors (array), risks (array), trading_insight (1-2 sentences on model vs market if market exists).
+narrative (2-4 sentences),
+key_factors (array of objects: { factor, impact: positive|negative|neutral, weight: 0-1, detail }),
+risks (array of strings), trading_insight (1-2 sentences on model vs market if market exists).
 
 FIXTURE:
 ${data.fixture.homeTeam.name} vs ${data.fixture.awayTeam.name}

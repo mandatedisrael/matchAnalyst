@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { BRAND_TITLE } from "@/components/brand-name";
+
 export default function NotFound() {
   return (
     <main className="mx-auto flex min-h-[60vh] max-w-lg flex-col items-center justify-center gap-4 px-6 py-16 text-center">
@@ -12,7 +14,7 @@ export default function NotFound() {
         href="/"
         className="bg-accent hover:bg-accent/90 rounded-xl px-5 py-3 text-sm font-semibold text-zinc-950"
       >
-        Open ai.ball
+        Open {BRAND_TITLE}
       </Link>
     </main>
   );

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import { Inter } from "next/font/google";
 
+import { BRAND_TAGLINE, BRAND_TITLE } from "@/components/brand-name";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -18,7 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ai.ball — Football AI Analyst",
+  title: `${BRAND_TITLE} — ${BRAND_TAGLINE}`,
   description:
     "AI-powered football match analysis with probability models and Polymarket market context",
 };

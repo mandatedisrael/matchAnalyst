@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { BrandName } from "@/components/brand-name";
+
 export function SiteHeader() {
   return (
     <header className="border-border sticky top-0 z-50 border-b bg-background/80 backdrop-blur-xl">
@@ -8,9 +10,7 @@ export function SiteHeader() {
           <span className="bg-accent/15 text-accent flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold">
             ⚽
           </span>
-          <span className="text-lg font-semibold tracking-tight">
-            ai<span className="text-accent">.</span>ball
-          </span>
+          <BrandName className="text-lg" />
         </Link>
 
         <nav className="flex items-center gap-6">

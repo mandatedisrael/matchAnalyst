@@ -13,6 +13,7 @@ import { H2HChart } from "@/components/charts/h2h-chart";
 import { ProbabilityChart } from "@/components/charts/probability-chart";
 import { TradingInsight } from "@/components/trading-insight";
 import { runAnalysisStream } from "@/lib/client/analyze-stream";
+import { readStashedFixture } from "@/lib/client/fixture-session";
 import { saveAnalysisResult } from "@/lib/client/local-store";
 import {
   buildMatchPreview,
@@ -39,6 +40,7 @@ export default function MatchDetailPage() {
   const [progressMessage, setProgressMessage] = useState<string | null>(null);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isBootstrapping, setIsBootstrapping] = useState(true);
 
   const saveAnalysis = useCallback(() => {
     if (!result) return;
@@ -52,19 +54,33 @@ export default function MatchDetailPage() {
   }, [result]);
 
   useEffect(() => {
-    if (!Number.isFinite(fixtureId)) return;
+    if (!Number.isFinite(fixtureId) || fixtureId <= 0) return;
 
     let cancelled = false;
+    const stashedFixture = readStashedFixture(fixtureId);
+    if (stashedFixture) {
+      setFixture(stashedFixture);
+    }
 
     async function loadAndAnalyze() {
+      setIsBootstrapping(true);
+      setProgressStep("fixture");
+      setProgressMessage("Fetching match details…");
+
       try {
         const fixtureRes = await fetch(`/api/fixtures/${fixtureId}`);
         const fixtureData = await fixtureRes.json();
         if (!fixtureRes.ok) {
-          throw new Error(fixtureData.error ?? "Fixture not found");
+          if (stashedFixture) {
+            // Search already resolved this fixture; keep showing it while analysis runs.
+            if (cancelled) return;
+          } else {
+            throw new Error(fixtureData.error ?? "Fixture not found");
+          }
+        } else if (!cancelled) {
+          setFixture(fixtureData.fixture);
         }
         if (cancelled) return;
-        setFixture(fixtureData.fixture);
 
         const marketRes = await fetch(`/api/fixtures/${fixtureId}/market`);
         const marketData = await marketRes.json();
@@ -96,6 +112,7 @@ export default function MatchDetailPage() {
       } finally {
         if (!cancelled) {
           setIsAnalyzing(false);
+          setIsBootstrapping(false);
           setProgressStep(null);
           setProgressMessage(null);
         }
@@ -120,6 +137,14 @@ export default function MatchDetailPage() {
       >
         ← Back to matches
       </Link>
+
+      {!fixture && isBootstrapping && !error && (
+        <header className="card mb-8 animate-pulse p-6 sm:p-8">
+          <div className="bg-surface-elevated mb-3 h-4 w-24 rounded-full" />
+          <div className="bg-surface-elevated mb-4 h-10 w-2/3 max-w-md rounded-xl" />
+          <div className="bg-surface-elevated h-4 w-48 rounded-full" />
+        </header>
+      )}
 
       {fixture && (
         <header className="card mb-8 p-6 sm:p-8">
@@ -162,13 +187,13 @@ export default function MatchDetailPage() {
         </header>
       )}
 
-      {(isAnalyzing || progressStep) && (
-        <div className="mb-6">
-          <AnalysisProgress
-            activeStep={progressStep}
-            message={progressMessage}
-          />
-        </div>
+      {!result && (isBootstrapping || isAnalyzing || progressStep) && (
+        <AnalysisProgress
+          activeStep={progressStep}
+          message={progressMessage}
+          homeTeam={fixture?.homeTeam.name}
+          awayTeam={fixture?.awayTeam.name}
+        />
       )}
 
       {error && (
@@ -231,9 +256,7 @@ export default function MatchDetailPage() {
         </div>
       )}
 
-      {!result && isAnalyzing && (
-        <p className="text-muted text-sm">Building charts and trends…</p>
-      )}
+
     </main>
   );
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { BRAND_TITLE } from "@/components/brand-name";
+
 export default function Error({
   error,
   reset,
@@ -14,7 +16,8 @@ export default function Error({
       </div>
       <h1 className="text-2xl font-bold">Something went wrong</h1>
       <p className="text-muted text-sm leading-6">
-        {error.message || "An unexpected error occurred while loading ai.ball."}
+        {error.message ||
+          `An unexpected error occurred while loading ${BRAND_TITLE}.`}
       </p>
       <button
         type="button"

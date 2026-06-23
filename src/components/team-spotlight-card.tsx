@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { stashFixtureForNavigation } from "@/lib/client/fixture-session";
 import {
   buildMatchPreview,
   isFixtureLive,
@@ -37,6 +38,7 @@ export function TeamSpotlightCard({
 
       <Link
         href={`/match/${nextFixture.id}`}
+        onClick={() => stashFixtureForNavigation(nextFixture)}
         className="card card-hover group block overflow-hidden transition-transform hover:-translate-y-0.5"
       >
         <div className="bg-accent/8 border-accent/20 border-b px-6 py-3">
