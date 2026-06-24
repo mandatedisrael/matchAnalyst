@@ -1,11 +1,19 @@
 export type Theme = "light" | "dark";
 
-export const THEME_STORAGE_KEY = "matchanalyst-theme";
+export const THEME_STORAGE_KEY = "ai-ball-theme";
 
 export function getStoredTheme(): Theme | null {
   if (typeof window === "undefined") return null;
-  const stored = localStorage.getItem(THEME_STORAGE_KEY);
-  return stored === "light" || stored === "dark" ? stored : null;
+  const stored =
+    localStorage.getItem(THEME_STORAGE_KEY) ??
+    localStorage.getItem("matchanalyst-theme");
+  if (stored === "light" || stored === "dark") {
+    if (!localStorage.getItem(THEME_STORAGE_KEY)) {
+      localStorage.setItem(THEME_STORAGE_KEY, stored);
+    }
+    return stored;
+  }
+  return null;
 }
 
 export function resolveTheme(): Theme {

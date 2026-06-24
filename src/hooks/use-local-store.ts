@@ -28,11 +28,11 @@ function subscribe(callback: () => void) {
   };
 
   window.addEventListener("storage", handler);
-  window.addEventListener("match-analyst:store", handler);
+  window.addEventListener("ai-ball:store", handler);
 
   return () => {
     window.removeEventListener("storage", handler);
-    window.removeEventListener("match-analyst:store", handler);
+    window.removeEventListener("ai-ball:store", handler);
   };
 }
 

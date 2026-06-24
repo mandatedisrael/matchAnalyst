@@ -1,6 +1,6 @@
 import type { FixtureSummary } from "@/types/fixture";
 
-const STORAGE_KEY = "match-analyst:fixture";
+const STORAGE_KEY = "ai-ball:fixture";
 
 export function stashFixtureForNavigation(fixture: FixtureSummary): void {
   if (typeof window === "undefined") return;
@@ -19,7 +19,9 @@ export function readStashedFixture(fixtureId: number): FixtureSummary | null {
   if (typeof window === "undefined") return null;
 
   try {
-    const raw = sessionStorage.getItem(STORAGE_KEY);
+    const raw =
+      sessionStorage.getItem(STORAGE_KEY) ??
+      sessionStorage.getItem("match-analyst:fixture");
     if (!raw) return null;
 
     const parsed = JSON.parse(raw) as { id: number; fixture: FixtureSummary };

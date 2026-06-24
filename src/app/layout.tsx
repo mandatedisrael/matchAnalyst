@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const themeInitScript = `(function(){try{var k='matchanalyst-theme';var s=localStorage.getItem(k);var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var t=s==='light'||s==='dark'?s:(d?'dark':'light');document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();`;
+const themeInitScript = `(function(){try{var k='ai-ball-theme';var s=localStorage.getItem(k)||localStorage.getItem('matchanalyst-theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var t=s==='light'||s==='dark'?s:(d?'dark':'light');document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();`;
 
 export const metadata: Metadata = {
   title: `${BRAND_TITLE} — ${BRAND_TAGLINE}`,

@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
-PROJECT_NAME="${VERCEL_PROJECT:-match-analyst-black}"
+PROJECT_NAME="${VERCEL_PROJECT:-ai-ball}"
 PRODUCTION_URL="${PRODUCTION_URL:-https://match-analyst-black.vercel.app}"
 ENV_FILE="${ENV_FILE:-.env.local}"
 

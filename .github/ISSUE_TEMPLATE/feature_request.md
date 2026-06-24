@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for Match Analyst
+about: Suggest an idea for ai.ball
 title: ''
 labels: enhancement
 assignees: ''

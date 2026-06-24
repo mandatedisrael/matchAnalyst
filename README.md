@@ -1,10 +1,10 @@
-# match⚽nalyst
+# ai.ball
 
 **AI football analyst** for fans who want data-backed, TEE-verified match breakdowns before placing a bet on [Polymarket](https://polymarket.com) or [Kalshi](https://kalshi.com).
 
-match⚽nalyst is not a sportsbook and not a Polymarket product. It researches fixtures across major leagues and competitions, runs analysis in 0G’s Trusted Execution Environment, and surfaces win/draw/away probabilities with clear reasoning. When a prediction market exists for the match, a direct link to **Polymarket** (or **Kalshi** as fallback) is attached so you can compare the model to live market prices.
+ai.ball is not a sportsbook and not a Polymarket product. It researches fixtures across major leagues and competitions, runs analysis in 0G’s Trusted Execution Environment, and surfaces win/draw/away probabilities with clear reasoning. When a prediction market exists for the match, a direct link to **Polymarket** (or **Kalshi** as fallback) is attached so you can compare the model to live market prices.
 
-**Live:** [https://match-analyst-black.vercel.app](https://match-analyst-black.vercel.app)
+**Live:** [https://match-analyst-black.vercel.app](https://match-analyst-black.vercel.app) · **Repo:** [github.com/mandatedisrael/ai.ball](https://github.com/mandatedisrael/ai.ball)
 
 ## What you get
 
@@ -69,7 +69,7 @@ See [architecture.md](./architecture.md) for data flows, API routes, and integra
 
 ## Disclaimer
 
-match⚽nalyst provides **research and analysis only**. It is not financial, betting, or investment advice. Prediction-market links are for convenience and informational context. Always gamble responsibly and within your jurisdiction’s rules.
+ai.ball provides **research and analysis only**. It is not financial, betting, or investment advice. Prediction-market links are for convenience and informational context. Always gamble responsibly and within your jurisdiction’s rules.
 
 ## License
 

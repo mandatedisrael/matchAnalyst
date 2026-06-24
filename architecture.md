@@ -1,8 +1,8 @@
-# match⚽nalyst — Architecture
+# ai.ball — Architecture
 
-**AI football analyst** for fans who want data-backed, TEE-verified match breakdowns before betting on [Polymarket](https://polymarket.com) or [Kalshi](https://kalshi.com). match⚽nalyst is not a sportsbook and not affiliated with either market — it attaches direct market links when a fixture is found. **Analysis only — not betting or financial advice.**
+**AI football analyst** for fans who want data-backed, TEE-verified match breakdowns before betting on [Polymarket](https://polymarket.com) or [Kalshi](https://kalshi.com). ai.ball is not a sportsbook and not affiliated with either market — it attaches direct market links when a fixture is found. **Analysis only — not betting or financial advice.**
 
-**Live:** [https://match-analyst-black.vercel.app](https://match-analyst-black.vercel.app)
+**Live:** [https://match-analyst-black.vercel.app](https://match-analyst-black.vercel.app) · **Repo:** [github.com/mandatedisrael/ai.ball](https://github.com/mandatedisrael/ai.ball)
 
 ---
 
@@ -196,7 +196,7 @@ Probabilities normalized to sum ~1.0. Draw shown explicitly in UI; if home + awa
 
 ```
 ┌────────────────────────────────────────────────────────────┐
-│ Header — match⚽nalyst, theme toggle                        │
+│ Header — ai.ball, theme toggle                             │
 ├────────────────────────────────────────────────────────────┤
 │ Match card — score, scorers, per-team win %, draw %        │
 │              bet CTA (Polymarket / Kalshi)                 │
@@ -272,14 +272,14 @@ football-data.org: track `X-Requests-Available-Minute` in `/api/health`.
 | Target | Role |
 |--------|------|
 | Vercel | Next.js frontend + API routes |
-| GitHub | `mandatedisrael/matchAnalyst` |
+| GitHub | `mandatedisrael/ai.ball` |
 
 ---
 
 ## 10. Project structure
 
 ```
-matchAnalyst/
+ai.ball/
 ├── architecture.md
 ├── README.md
 ├── src/

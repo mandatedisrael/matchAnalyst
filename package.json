@@ -1,13 +1,13 @@
 {
-  "name": "match-analyst",
+  "name": "ai-ball",
   "version": "0.1.0",
   "private": true,
-  "description": "match⚽nalyst — TEE-verified AI football analysis backed by data, with Polymarket and Kalshi market links for fans researching before they bet",
+  "description": "ai.ball — TEE-verified AI football analysis backed by data, with Polymarket and Kalshi market links for fans researching before they bet",
   "author": "mandatedisrael",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mandatedisrael/matchAnalyst.git"
+    "url": "https://github.com/mandatedisrael/ai.ball.git"
   },
   "keywords": [
     "football",

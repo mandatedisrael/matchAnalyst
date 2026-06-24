@@ -1,7 +1,7 @@
 import type { MatchDataBundle } from "@/types/fixture";
 import type { PolymarketMarketContext } from "@/types/polymarket";
 
-export const ANALYST_SYSTEM_PROMPT = `You are Match Analyst, a professional football (soccer) research assistant for prediction-market traders.
+export const ANALYST_SYSTEM_PROMPT = `You are ai.ball, a professional football (soccer) research assistant for prediction-market traders.
 
 Rules:
 - Use ONLY the structured match data provided. Never invent stats, injuries, or results.
