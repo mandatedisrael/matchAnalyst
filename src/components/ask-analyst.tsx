@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 
+import { BrandBall } from "@/components/brand-ball";
 import { TeeVerifiedBadge } from "@/components/tee-verified-badge";
 import { isTeeVerified } from "@/lib/tee-verified";
 import type { AnalysisResult } from "@/types/analysis";
@@ -67,8 +68,11 @@ export function AskAnalyst({ result }: AskAnalystProps) {
 
   if (!result) {
     return (
-      <section className="card p-6">
-        <h2 className="text-lg font-semibold">Ask analyst</h2>
+      <section className="card animate-fade-up p-6">
+        <h2 className="flex items-center gap-2 text-lg font-semibold">
+          <BrandBall size={18} className="text-accent opacity-60" />
+          Ask analyst
+        </h2>
         <p className="text-muted mt-2 text-sm">
           Run a match analysis first, then ask follow-up questions.
         </p>
@@ -77,10 +81,13 @@ export function AskAnalyst({ result }: AskAnalystProps) {
   }
 
   return (
-    <section className="card flex flex-col p-6">
+    <section className="card animate-fade-up flex flex-col p-6">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold">Ask analyst</h2>
+          <h2 className="flex items-center gap-2 text-lg font-semibold">
+            <BrandBall size={18} className="text-accent ball-wiggle" />
+            Ask analyst
+          </h2>
           <p className="text-muted text-sm">
             Follow-up questions grounded in the current analysis
           </p>
@@ -132,7 +139,10 @@ export function AskAnalyst({ result }: AskAnalystProps) {
           </div>
         ))}
         {isLoading && (
-          <p className="text-muted animate-pulse text-sm">Analyst is thinking…</p>
+          <p className="text-muted flex items-center gap-2 text-sm">
+            <BrandBall size={14} className="text-accent ball-spin-slow" />
+            Analyst is thinking…
+          </p>
         )}
       </div>
 

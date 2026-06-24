@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { BrandBall } from "@/components/brand-ball";
 import { stashFixtureForNavigation } from "@/lib/client/fixture-session";
 import {
   buildMatchPreview,
@@ -42,7 +43,13 @@ export function MatchFeedCard({ fixture, market, index = 0 }: MatchFeedCardProps
           <p className="label mb-1.5">{fixture.league.name}</p>
           <h2 className="font-display text-lg font-bold tracking-tight transition-colors group-hover:text-accent sm:text-xl">
             {fixture.homeTeam.name}
-            <span className="text-muted mx-2 font-normal">vs</span>
+            <span className="text-muted mx-2 inline-flex items-center gap-1.5 font-normal">
+              <BrandBall
+                size={14}
+                className="text-accent opacity-40 transition-opacity group-hover:opacity-100 group-hover-ball-roll"
+              />
+              vs
+            </span>
             {fixture.awayTeam.name}
           </h2>
         </div>
@@ -90,7 +97,8 @@ export function MatchFeedCard({ fixture, market, index = 0 }: MatchFeedCardProps
         </div>
       )}
 
-      <span className="text-accent mt-4 text-xs font-semibold tracking-wide uppercase opacity-0 transition-opacity group-hover:opacity-100">
+      <span className="text-accent mt-4 inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide uppercase opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100">
+        <BrandBall size={12} className="group-hover-ball-roll" />
         Open analysis →
       </span>
     </Link>

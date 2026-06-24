@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { BrandBall } from "@/components/brand-ball";
 import { stashFixtureForNavigation } from "@/lib/client/fixture-session";
 import {
   buildMatchPreview,
@@ -27,10 +28,13 @@ export function TeamSpotlightCard({
   const polyOutcome = market?.outcomes[0];
 
   return (
-    <section className="mx-auto mt-8 max-w-3xl">
+    <section className="animate-fade-up mx-auto mt-8 max-w-3xl">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
-          <p className="label mb-1">Next match found</p>
+          <p className="label mb-1 inline-flex items-center gap-1.5">
+            <BrandBall size={12} className="text-accent ball-bounce" />
+            Next match found
+          </p>
           <h2 className="text-lg font-semibold">{team.name}</h2>
         </div>
         <span className="text-muted text-xs">{team.country}</span>
@@ -41,7 +45,8 @@ export function TeamSpotlightCard({
         onClick={() => stashFixtureForNavigation(nextFixture)}
         className="card card-hover group block overflow-hidden transition-transform hover:-translate-y-0.5"
       >
-        <div className="bg-accent/8 border-accent/20 border-b px-6 py-3">
+        <div className="bg-accent/8 border-accent/20 flex items-center gap-2 border-b px-6 py-3">
+          <BrandBall size={16} className="text-accent ball-wiggle" />
           <p className="text-accent text-sm font-medium">
             Tap for full AI analysis →
           </p>

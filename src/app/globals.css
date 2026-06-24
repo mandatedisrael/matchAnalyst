@@ -122,6 +122,146 @@ select {
   pointer-events: none;
 }
 
+.floating-balls {
+  z-index: 0;
+}
+
+.floating-ball {
+  position: absolute;
+  animation: ball-drift ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes ball-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate3d(12px, -18px, 0) rotate(8deg);
+  }
+  66% {
+    transform: translate3d(-10px, 10px, 0) rotate(-6deg);
+  }
+}
+
+@keyframes ball-spin-slow-keyframes {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ball-bounce-keyframes {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  45% {
+    transform: translateY(-10px) scale(1.04);
+  }
+  55% {
+    transform: translateY(-10px) scale(1.04);
+  }
+}
+
+@keyframes ball-wiggle-keyframes {
+  0%,
+  100% {
+    transform: rotate(-6deg);
+  }
+  50% {
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes ball-roll-keyframes {
+  0% {
+    transform: translateX(0) rotate(0deg);
+  }
+  100% {
+    transform: translateX(6px) rotate(90deg);
+  }
+}
+
+@keyframes hero-ball-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes text-shimmer-slide {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+.ball-spin-slow {
+  animation: ball-spin-slow-keyframes 12s linear infinite;
+}
+
+.ball-bounce {
+  animation: ball-bounce-keyframes 1.4s ease-in-out infinite;
+}
+
+.ball-wiggle {
+  animation: ball-wiggle-keyframes 2.4s ease-in-out infinite;
+}
+
+.ball-roll {
+  animation: ball-roll-keyframes 420ms cubic-bezier(0.34, 1.2, 0.64, 1) both;
+}
+
+.hero-ball-pop {
+  animation: hero-ball-pop 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-title-shimmer {
+  background: linear-gradient(
+    110deg,
+    var(--foreground) 0%,
+    var(--foreground) 42%,
+    var(--accent-bright) 50%,
+    var(--foreground) 58%,
+    var(--foreground) 100%
+  );
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: text-shimmer-slide 6s ease-in-out infinite;
+}
+
+.btn-primary:hover:not(:disabled) .btn-ball-icon {
+  animation: ball-wiggle-keyframes 0.6s ease-in-out;
+}
+
+.logo-ball-wrap {
+  transition: transform 320ms cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.group:hover .logo-ball-wrap {
+  transform: scale(1.08);
+}
+
+.group:hover .logo-ball-wrap .ball-spin-slow {
+  animation-duration: 4s;
+}
+
+.group:hover .group-hover-ball-roll {
+  animation: ball-roll-keyframes 420ms cubic-bezier(0.34, 1.2, 0.64, 1) both;
+}
+
 .card {
   border-radius: 1.125rem;
   border: 1px solid var(--border);
@@ -468,11 +608,19 @@ select {
   .analysis-orb,
   .analysis-shimmer,
   .analysis-skeleton-card,
-  .live-pulse {
+  .live-pulse,
+  .floating-ball,
+  .ball-spin-slow,
+  .ball-bounce,
+  .ball-wiggle,
+  .ball-roll,
+  .hero-ball-pop,
+  .hero-title-shimmer {
     animation: none;
   }
 
-  .card-hover:hover {
+  .card-hover:hover,
+  .group:hover .logo-ball-wrap {
     transform: none;
   }
 }

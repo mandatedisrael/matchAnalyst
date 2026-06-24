@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 import { AnalysisProgress } from "@/components/analysis-progress";
+import { LoadingBall } from "@/components/loading-ball";
 import { AnalysisResultsPanel } from "@/components/analysis-results-panel";
 import { AskAnalyst } from "@/components/ask-analyst";
 import { BetMarketRail } from "@/components/bet-market-rail";
@@ -209,10 +210,8 @@ export default function MatchDetailPage() {
       </Link>
 
       {!fixture && isBootstrapping && !error && (
-        <header className="card mb-8 animate-pulse p-6 sm:p-8">
-          <div className="bg-surface-elevated mb-3 h-4 w-24 rounded-full" />
-          <div className="bg-surface-elevated mb-4 h-10 w-2/3 max-w-md rounded-xl" />
-          <div className="bg-surface-elevated h-4 w-48 rounded-full" />
+        <header className="card mb-8 p-6 sm:p-8">
+          <LoadingBall label="Loading match…" />
         </header>
       )}
 

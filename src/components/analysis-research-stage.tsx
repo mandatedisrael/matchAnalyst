@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { BrandBall } from "@/components/brand-ball";
 import { AnalysisSourcePills } from "@/components/analysis-source-pills";
 import { TeeVerifiedBadge, TeeVerifiedCallout } from "@/components/tee-verified-badge";
 import type { AnalysisProgressStep } from "@/types/stream";
@@ -52,8 +53,8 @@ export function AnalysisResearchStage({
       <div className="card overflow-hidden p-6 sm:p-8">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="analysis-orb bg-accent/20 text-accent flex h-10 w-10 items-center justify-center rounded-2xl text-lg ring-1 ring-accent/25">
-              ⚽
+            <span className="analysis-orb bg-accent/20 text-accent flex h-10 w-10 items-center justify-center rounded-2xl ring-1 ring-accent/25">
+              <BrandBall size={24} className="ball-spin-slow" />
             </span>
             <div>
               <p className="label mb-0.5">In progress</p>

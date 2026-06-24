@@ -1,5 +1,6 @@
 "use client";
 
+import { BrandBall } from "@/components/brand-ball";
 import { AnalysisChartsGrid } from "@/components/analysis-charts-grid";
 import { AnalysisSourcePills } from "@/components/analysis-source-pills";
 import { TeeVerifiedBadge, TeeVerifiedCallout } from "@/components/tee-verified-badge";
@@ -32,11 +33,11 @@ export function AnalysisResultsPanel({
   const teeVerified = isTeeVerified(result);
 
   return (
-    <section className="space-y-5">
+    <section className="animate-fade-up space-y-5">
       <div className="card p-6 sm:p-8">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="bg-positive h-2 w-2 rounded-full" aria-hidden />
+            <BrandBall size={20} className="text-positive hero-ball-pop" />
             <h2 className="font-display text-base font-bold">Analysis complete</h2>
           </div>
           <div className="flex flex-wrap items-center gap-2">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 
 import { BRAND_TAGLINE, BRAND_TITLE } from "@/components/brand-name";
+import { FloatingBalls } from "@/components/floating-balls";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -44,7 +45,8 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col">
         <ThemeProvider>
           <div className="app-bg pointer-events-none fixed inset-0" />
-          <div className="relative flex min-h-full flex-1 flex-col">
+          <FloatingBalls />
+          <div className="relative z-[1] flex min-h-full flex-1 flex-col">
             <SiteHeader />
             {children}
             <SiteFooter />

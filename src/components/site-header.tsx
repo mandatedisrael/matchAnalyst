@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { BrandBall } from "@/components/brand-ball";
 import { BrandName } from "@/components/brand-name";
 import { TeeVerifiedBadge } from "@/components/tee-verified-badge";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -12,8 +13,8 @@ export function SiteHeader() {
     >
       <div className="mx-auto flex h-[4.25rem] max-w-6xl items-center justify-between px-5 sm:px-8">
         <Link href="/" className="group flex items-center gap-3">
-          <span className="bg-accent/12 text-accent flex h-9 w-9 items-center justify-center rounded-full text-xl font-bold leading-none ring-1 ring-accent/20 transition group-hover:scale-105 group-hover:ring-accent/40">
-            ·
+          <span className="logo-ball-wrap bg-accent/12 text-accent flex h-9 w-9 items-center justify-center rounded-full ring-1 ring-accent/20 group-hover:ring-accent/40">
+            <BrandBall size={22} className="ball-spin-slow" />
           </span>
           <BrandName className="text-lg" />
         </Link>

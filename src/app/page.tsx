@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { BrandBall } from "@/components/brand-ball";
+import { LoadingBall } from "@/components/loading-ball";
 import { MatchFeedCard } from "@/components/match-feed-card";
 import { MatchSearchHeader } from "@/components/match-search-header";
 import { SavedAnalyses } from "@/components/saved-analyses";
@@ -195,8 +197,11 @@ export default function HomePage() {
 
       {!spotlight && (hasInitiallyLoaded || isSearching || error) && (
         <section className="mt-8">
-          <div className="mb-5 flex items-center justify-between">
-            <h2 className="font-display text-xl font-semibold">
+          <div className="animate-fade-up mb-5 flex items-center justify-between">
+            <h2 className="font-display flex items-center gap-2 text-xl font-semibold">
+              {!showInitialLoading && (
+                <BrandBall size={18} className="text-accent ball-wiggle" />
+              )}
               {showInitialLoading ? "Loading fixtures…" : sectionTitle}
             </h2>
             {!isSearching && fixtures.length > 0 && (
@@ -207,7 +212,8 @@ export default function HomePage() {
           </div>
 
           {fixtures.length === 0 && !isSearching && !error && activeQuery && (
-            <div className="card py-16 text-center">
+            <div className="card animate-fade-up py-16 text-center">
+              <BrandBall size={36} className="text-accent ball-wiggle mx-auto mb-5" />
               <p className="text-muted text-sm">
                 No upcoming match found for “{activeQuery}”. Try the full team
                 name or a different spelling.
@@ -216,7 +222,8 @@ export default function HomePage() {
           )}
 
           {showBrowseEmpty && (
-            <div className="card py-16 text-center">
+            <div className="card animate-fade-up py-16 text-center">
+              <BrandBall size={36} className="text-accent ball-wiggle mx-auto mb-5" />
               <p className="text-muted text-sm">
                 No upcoming fixtures in this league right now. Try another league
                 or search a team by name.
@@ -225,6 +232,8 @@ export default function HomePage() {
           )}
 
           {(showInitialLoading || (isSearching && fixtures.length === 0)) && (
+            <div className="animate-fade-in">
+              <LoadingBall label="Fetching fixtures…" className="mb-6" />
             <div className="grid gap-4 sm:grid-cols-2">
               {[0, 1, 2, 3].map((slot) => (
                 <div
@@ -237,6 +246,7 @@ export default function HomePage() {
                   <div className="analysis-shimmer h-16 w-full rounded-xl" />
                 </div>
               ))}
+            </div>
             </div>
           )}
 
