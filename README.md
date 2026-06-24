@@ -4,7 +4,7 @@
 
 ai.ball is not a sportsbook and not a Polymarket product. It researches fixtures across major leagues and competitions, runs analysis in 0G’s Trusted Execution Environment, and surfaces win/draw/away probabilities with clear reasoning. When a prediction market exists for the match, a direct link to **Polymarket** (or **Kalshi** as fallback) is attached so you can compare the model to live market prices.
 
-**Live:** [https://match-analyst-black.vercel.app](https://match-analyst-black.vercel.app) · **Repo:** [github.com/mandatedisrael/ai.ball](https://github.com/mandatedisrael/ai.ball)
+**Live:** [https://aiballanalysis.vercel.app](https://aiballanalysis.vercel.app) · **Repo:** [github.com/mandatedisrael/ai.ball](https://github.com/mandatedisrael/ai.ball)
 
 ## What you get
 

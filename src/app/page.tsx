@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { BrandBall } from "@/components/brand-ball";
 import { LoadingBall } from "@/components/loading-ball";
+import { FootballNewsTicker } from "@/components/football-news-ticker";
 import { MatchFeedCard } from "@/components/match-feed-card";
 import { MatchSearchHeader } from "@/components/match-search-header";
 import { SavedAnalyses } from "@/components/saved-analyses";
@@ -174,6 +175,8 @@ export default function HomePage() {
         onLeagueChange={(id) => setSelectedLeagueId(id ?? WORLD_CUP_LEAGUE_ID)}
         onSearch={searchFixtures}
       />
+
+      <FootballNewsTicker />
 
       {spotlight && !isSearching && (
         <TeamSpotlightCard

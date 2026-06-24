@@ -3,8 +3,8 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
-PROJECT_NAME="${VERCEL_PROJECT:-ai-ball}"
-PRODUCTION_URL="${PRODUCTION_URL:-https://match-analyst-black.vercel.app}"
+PROJECT_NAME="${VERCEL_PROJECT:-aiballanalysis}"
+PRODUCTION_URL="${PRODUCTION_URL:-https://aiballanalysis.vercel.app}"
 ENV_FILE="${ENV_FILE:-.env.local}"
 
 if ! vercel whoami >/dev/null 2>&1; then

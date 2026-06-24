@@ -2,7 +2,7 @@
 
 **AI football analyst** for fans who want data-backed, TEE-verified match breakdowns before betting on [Polymarket](https://polymarket.com) or [Kalshi](https://kalshi.com). ai.ball is not a sportsbook and not affiliated with either market — it attaches direct market links when a fixture is found. **Analysis only — not betting or financial advice.**
 
-**Live:** [https://match-analyst-black.vercel.app](https://match-analyst-black.vercel.app) · **Repo:** [github.com/mandatedisrael/ai.ball](https://github.com/mandatedisrael/ai.ball)
+**Live:** [https://aiballanalysis.vercel.app](https://aiballanalysis.vercel.app) · **Repo:** [github.com/mandatedisrael/ai.ball](https://github.com/mandatedisrael/ai.ball)
 
 ---
 
