@@ -42,7 +42,7 @@ export function TeamLogo({
         loading="lazy"
         decoding="async"
         onError={() => setFailed(true)}
-        className={`shrink-0 rounded-full bg-white object-contain p-0.5 ring-1 ring-border/50 ${className}`}
+        className={`shrink-0 rounded-full object-contain ring-1 ring-border/30 ${className}`}
         style={{ width: size, height: size }}
       />
     );
